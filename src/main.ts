@@ -14,7 +14,6 @@ const getCurrentRelease = async () => {
             owner: currentOwner,
             repo: currentRepo
         })
-        core.info(JSON.stringify(data, null, 2))
         return data.data.tag_name
     }
     catch (error) {

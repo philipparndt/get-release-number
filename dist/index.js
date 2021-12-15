@@ -52,7 +52,6 @@ const getCurrentRelease = () => __awaiter(void 0, void 0, void 0, function* () {
             owner: currentOwner,
             repo: currentRepo
         });
-        core.info(JSON.stringify(data, null, 2));
         return data.data.tag_name;
     }
     catch (error) {
