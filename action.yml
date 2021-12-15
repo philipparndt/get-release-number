@@ -5,6 +5,10 @@ inputs:
   GITHUB_TOKEN:
     required: true
     description: 'GitHub token'
+  firstRelease:
+    required: true
+    description: 'Default first release number'
+    default: '0.0.0'
 runs:
   using: 'node16'
   main: 'dist/index.js'

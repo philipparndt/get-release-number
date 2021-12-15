@@ -37,18 +37,34 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
+const getCurrentRelease = () => __awaiter(void 0, void 0, void 0, function* () {
+    const { owner: currentOwner, repo: currentRepo } = github.context.repo;
+    const token = core.getInput("GITHUB_TOKEN");
+    const octokit = github.getOctokit(token);
+    core.info("Fetching latest release");
+    try {
+        const data = yield octokit.rest.repos.getLatestRelease({
+            owner: currentOwner,
+            repo: currentRepo
+        });
+        core.info(JSON.stringify(data, null, 2));
+        return data.data.tag_name;
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            if (error.message === "Not Found") {
+                return core.getInput("firstRelease");
+            }
+        }
+        core.setFailed(`Failed to fetch releases ${error}`);
+        throw error;
+    }
+});
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const { owner: currentOwner, repo: currentRepo } = github.context.repo;
-            const token = core.getInput("GITHUB_TOKEN");
-            const octokit = github.getOctokit(token);
-            core.info("Fetching latest release");
-            const data = yield octokit.rest.repos.getLatestRelease({
-                owner: currentOwner,
-                repo: currentRepo
-            });
-            core.info(JSON.stringify(data, null, 2));
+            const release = yield getCurrentRelease();
+            core.info(release);
         }
         catch (error) {
             if (error instanceof Error) {
