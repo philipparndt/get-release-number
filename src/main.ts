@@ -5,8 +5,7 @@ async function run (): Promise<void> {
     try {
         const token = core.getInput("GITHUB_TOKEN")
         const octokit = github.getOctokit(token)
-        console.log(octokit)
-        const data = await octokit.rest.repos.listReleases()
+        const data = await octokit.rest.repos.getLatestRelease()
         console.log(data)
     }
     catch (error) {
