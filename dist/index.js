@@ -40,10 +40,14 @@ const github = __importStar(__nccwpck_require__(5438));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const { owner: currentOwner, repo: currentRepo } = github.context.repo;
             const token = core.getInput("GITHUB_TOKEN");
             const octokit = github.getOctokit(token);
             core.info("Fetching latest release");
-            const data = yield octokit.rest.repos.getLatestRelease();
+            const data = yield octokit.rest.repos.getLatestRelease({
+                owner: currentOwner,
+                repo: currentRepo
+            });
             core.info(`${data}`);
         }
         catch (error) {
