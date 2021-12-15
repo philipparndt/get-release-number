@@ -12,7 +12,7 @@ async function run (): Promise<void> {
             owner: currentOwner,
             repo: currentRepo
         })
-        core.info(`${data}`)
+        core.info(JSON.stringify(data, null, 2))
     }
     catch (error) {
         if (error instanceof Error) {
