@@ -42,8 +42,7 @@ function run() {
         try {
             const token = core.getInput("GITHUB_TOKEN");
             const octokit = github.getOctokit(token);
-            console.log(octokit);
-            const data = yield octokit.rest.repos.listReleases();
+            const data = yield octokit.rest.repos.getLatestRelease();
             console.log(data);
         }
         catch (error) {
