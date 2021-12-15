@@ -1,5 +1,6 @@
 import * as core from "@actions/core"
 import * as github from "@actions/github"
+import semver from "semver/preload"
 
 const getCurrentRelease = async () => {
     const { owner: currentOwner, repo: currentRepo } = github.context.repo
@@ -27,10 +28,44 @@ const getCurrentRelease = async () => {
     }
 }
 
+export const formatRelease = (version: string) => {
+    return version.split("-")[0]
+}
+
+export const nextPatch = (version: string) => {
+    return semver.inc(version, "patch")
+}
+
+export const nextMinor = (version: string) => {
+    return semver.inc(version, "minor")
+}
+
+export const nextMajor = (version: string) => {
+    return semver.inc(version, "major")
+}
+
+export const getNextRelease = (version: string, type: string) => {
+    switch (type) {
+    case "patch":
+        return nextPatch(version)
+    case "minor":
+        return nextMinor(version)
+    case "major":
+        return nextMajor(version)
+    default:
+        throw Error(`Unknown release type: ${type}`)
+    }
+}
+
 async function run (): Promise<void> {
     try {
         const release = await getCurrentRelease()
-        core.info(release)
+        const clean = formatRelease(release)
+        core.info(`Current release is '${release}`)
+        const type = core.getInput("releaseType")
+        const next = getNextRelease(clean, type) ?? "0.0.0"
+        core.info(`Next release will be '${next}`)
+        core.setOutput("version", next)
     }
     catch (error) {
         if (error instanceof Error) {

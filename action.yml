@@ -9,6 +9,12 @@ inputs:
     required: true
     description: 'Default first release number'
     default: '0.0.0'
+  releaseType:
+    required: true
+    description: 'major, minor or patch'
+outputs:
+  version:
+    description: 'next version'
 runs:
   using: 'node16'
   main: 'dist/index.js'
