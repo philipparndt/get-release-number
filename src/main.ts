@@ -43,7 +43,7 @@ export const nextMajor = (version: string) => {
     return semver.inc(version, "major")
 }
 
-export const getNextRelease = (version: string, type: string) => {
+export const getRelease = (version: string, type: string) => {
     switch (type) {
     case "patch":
         return nextPatch(version)
@@ -51,6 +51,8 @@ export const getNextRelease = (version: string, type: string) => {
         return nextMinor(version)
     case "major":
         return nextMajor(version)
+    case "current":
+        return version
     default:
         throw Error(`Unknown release type: ${type}`)
     }
@@ -62,8 +64,8 @@ async function run (): Promise<void> {
         const clean = formatRelease(release)
         core.info(`Current release is '${release}`)
         const type = core.getInput("releaseType")
-        const next = getNextRelease(clean, type) ?? "0.0.0"
-        core.info(`Next release will be '${next}`)
+        const next = getRelease(clean, type) ?? "0.0.0"
+        core.info(`Result version is '${next}`)
         core.setOutput("version", next)
     }
     catch (error) {
